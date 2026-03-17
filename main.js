@@ -1,6 +1,12 @@
 const container = document.querySelector(".container")
-const size = document.querySelector(".size").value
-const ran = 432
+var size = document.querySelector(".size").value
+var ran = document.querySelector(".range").value
+const recalcBtn = document.querySelector(".recalc")
+const zoomBtn = document.querySelector(".zoom")
+
+var radius = 1
+var midpoint = [0,0]
+var bounds = [-2,2,-2,2]
 
 function componentToHex(c) {
   var hex = Math.floor(c).toString(16)
@@ -41,6 +47,10 @@ function hsv_to_rgb(h, s, v){
     }
 }
 
+function calculateBounds(){
+    return [-2*radius+midpoint[0],2*radius+midpoint[0],-2*radius+midpoint[1],2*radius+midpoint[1]]
+}
+
 function lerp(a, b, t){
     return a+(b-a)*t
 }
@@ -55,14 +65,17 @@ function circle(x,y,a){
 
 function inSet(coords){
     var iteration=0
-    const x=lerp(-2,2,coords[1]/size)
-    const y=lerp(-2,2,coords[0]/size)
+    const x=lerp(bounds[0],bounds[1],coords[1]/size)
+    const y=lerp(bounds[2],bounds[3],coords[0]/size)
     var x0=x
     var y0=y
+    if (cardioid(x-0.25,y,0.5)||circle(x+1,y,0.25)){
+        return [0,0,0]
+    }
     for (let i = 0; i < ran; i++){
         var zx=(x0**2-y0**2+x)
         var zy=(2*x0*y0+y)
-        if (zx**2+zy**2<=4){
+        if (zx**2+zy**2<=4){ //calculates if a pixel is in the set
             var x0=zx
             var y0=zy
             var iteration=i+1
@@ -79,17 +92,50 @@ function inSet(coords){
     return hsv_to_rgb(h/255,s,v)
 }
 
+function recalc(){
+    container.innerHTML = ""
+    bounds = calculateBounds()
+    size = document.querySelector(".size").value
+    ran = document.querySelector(".range").value
+    draw(size)
+}
+
 function draw(size){
     container.style.setProperty("--size", size)
     for (let x = 0; x < size; x++){
         for (let y = 0; y < size; y++){
             const div = document.createElement("div")
             div.classList.add("pixel")
-            const col = inSet([x,y])
+
+            const col = inSet([x,y]) //calculates colour of pixel
             div.style.backgroundColor = rgbToHex(col[0],col[1],col[2])
             container.appendChild(div)
+
+            div.addEventListener("click", function(){
+                midpoint = [lerp(bounds[0],bounds[1],y/size),lerp(bounds[2],bounds[3],x/size)]
+                recalc()
+            })
         }
     }
 }
 
+bounds = calculateBounds()
+console.log(bounds)
 draw(size)
+
+recalcBtn.addEventListener("mousedown", function(){
+    recalcBtn.style.borderStyle = "inset"
+    recalcBtn.addEventListener("mouseup", function(){
+        recalcBtn.style.borderStyle = "groove"
+        recalc()
+    })
+})
+
+zoomBtn.addEventListener("mousedown", function(){
+    zoomBtn.style.borderStyle = "inset"
+    zoomBtn.addEventListener("mouseup", function(){
+        zoomBtn.style.borderStyle = "groove"
+        radius = radius*0.75
+        recalc()
+    })
+})

@@ -7,16 +7,18 @@ html, body{
     height: 100%;
 }
 body{
-    background-color: mediumspringgreen;
+    background-color: #3f3f3f;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 .navbar, .container{
-    background-color: #1f1f1f;
+    background-color: #242424;
     width: 800px;
+    border-style: ridge;
     border-radius: 1em;
+    border-color: mediumspringgreen;
 }
 .navbar{
     padding: 1em;
@@ -24,15 +26,25 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    border-bottom-left-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
 }
-.btn, input{
+.zoom, .recalc, input{
     height: 35px;
     padding: 0 1em;
-}
-.color{
-    padding:0 .25em;
-    width: 100px;
+    background-color: #242424;
+    border-style: groove;
+    border-color: #000000;
+    border-width: 4px;
+    border-radius: 4px;
     margin: 0 1em;
+    font-size: 15px;
+    font-family: Courier;
+    font-weight: bolder;
+    color: #cecece;
+}
+input{
+    border-style: inset;
 }
 .container{
     --size: 4;
@@ -41,6 +53,8 @@ body{
     grid-template-columns: repeat(var(--size), 1fr);
     grid-template-rows: repeat(var(--size), 1fr);
     padding: 1em;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
 }
 .pixel{
     background-color: #343434;
