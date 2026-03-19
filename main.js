@@ -125,17 +125,21 @@ draw(size)
 
 recalcBtn.addEventListener("mousedown", function(){
     recalcBtn.style.borderStyle = "inset"
+    recalcBtn.style.setProperty("--grad", 20)
     recalcBtn.addEventListener("mouseup", function(){
         recalcBtn.style.borderStyle = "groove"
+        recalcBtn.style.setProperty("--grad", 52)
         recalc()
     })
 })
 
 zoomBtn.addEventListener("mousedown", function(){
     zoomBtn.style.borderStyle = "inset"
+    zoomBtn.style.setProperty("--grad", 20)
     zoomBtn.addEventListener("mouseup", function(){
         zoomBtn.style.borderStyle = "groove"
-        radius = radius*0.75
+        zoomBtn.style.setProperty("--grad", 52)
+        radius = radius * 0.75
         recalc()
     })
 })
